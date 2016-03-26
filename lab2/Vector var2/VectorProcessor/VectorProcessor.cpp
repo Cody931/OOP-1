@@ -8,8 +8,7 @@
 
 vector<double> ReadInputDataInVector()
 {
-	vector<double> numbers(istream_iterator<double>(cin), (istream_iterator<double>()));
-	return numbers;
+	return{ istream_iterator<double>(cin), (istream_iterator<double>()) };
 }
 
 void TransformVector(vector<double> & numbers)
@@ -22,11 +21,6 @@ void TransformVector(vector<double> & numbers)
 			return numb * min;
 		});
 	}
-}
-
-void Sort(vector<double> & numbers)
-{
-	sort(begin(numbers), end(numbers));
 }
 
 void PrintVector(vector<double> const& numbers)

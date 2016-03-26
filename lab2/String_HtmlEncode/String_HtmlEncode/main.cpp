@@ -9,6 +9,7 @@ using namespace std;
 int _tmain()
 {
 	string text;
+	cout << "Enter the text to encode: ";
 	text = ReadInpitText();
 	HtmlTextEncode(text);
 	PrintText(text);

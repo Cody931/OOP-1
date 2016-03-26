@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include <vector>
 #include <iostream>
+#include <algorithm> 
 #include "VectorProcessor.h"
 
 int _tmain()
@@ -9,7 +10,7 @@ int _tmain()
 	std::cout << "Please enter float numbers(Example: 17.256), separated by space.\nWhen you're finished enter 'dot + Enter'\nNumbers: ";
 	numbers = ReadInputDataInVector();
 	TransformVector(numbers);
-	Sort(numbers);
+	sort(begin(numbers), end(numbers));
 	PrintVector(numbers);
     return 0;
 }
