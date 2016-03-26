@@ -10,7 +10,7 @@ int _tmain()
 {
 	string text;
 	cout << "Enter the text to encode: ";
-	text = ReadInpitText();
+	text = ReadInputText();
 	HtmlTextEncode(text);
 	PrintText(text);
     return 0;

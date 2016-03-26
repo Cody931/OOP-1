@@ -4,7 +4,7 @@
 #include <boost/range/algorithm/transform.hpp>
 
 
-string ReadInpitText()
+string ReadInputText()
 {
 	string text;
 	getline(cin, text);

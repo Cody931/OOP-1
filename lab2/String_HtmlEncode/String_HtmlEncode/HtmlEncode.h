@@ -4,7 +4,7 @@
 
 using namespace std;
 
-string ReadInpitText();
+string ReadInputText();
 
 void HtmlTextEncode(string & text);
 
