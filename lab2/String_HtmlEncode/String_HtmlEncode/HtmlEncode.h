@@ -1,11 +1,10 @@
 #include <string>
 #include <iostream>
 
-
 using namespace std;
 
 string ReadInputText();
 
-void HtmlTextEncode(string & text);
+string HtmlTextEncode(string const& text);
 
 void PrintText(string const& text);

@@ -7,14 +7,13 @@ BOOST_AUTO_TEST_SUITE(Html_Encode)
 	{
 		string checkedString = "";
 		HtmlTextEncode(checkedString);
-		BOOST_CHECK(checkedString.empty());
+		BOOST_CHECK(HtmlTextEncode(checkedString).empty());
 	}
 
 	BOOST_AUTO_TEST_CASE(should_encode_not_emty_string)
 	{
-		string checkedString = "Hel&lo, 'world' <\"< or >>";
-		string rightString = "Hel&amp;lo, &apos;world&apos; &lt;&quot;&lt; or &gt;&gt;";
-		HtmlTextEncode(checkedString);
-		BOOST_CHECK_EQUAL(checkedString, rightString);
+		string checkedString = "\"Hello!\" said Maggie&Annie >> 'crazy' Adam.";
+		string rightString = "&quot;Hello!&quot; said Maggie&amp;Annie &gt;&gt; &apos;crazy&apos; Adam.";
+		BOOST_CHECK_EQUAL(HtmlTextEncode(checkedString), rightString);
 	}
 BOOST_AUTO_TEST_SUITE_END()

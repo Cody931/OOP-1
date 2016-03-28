@@ -1,17 +1,15 @@
 #include "stdafx.h"
 #include "HtmlEncode.h"
-#include <algorithm>
-#include <boost/range/algorithm/transform.hpp>
-
 
 string ReadInputText()
 {
 	string text;
-	getline(cin, text);
+	cout << "Enter the text to encode (Enter \"no\", if input should fihished!): ";
+	while (getline(cin, text))
 	return text;
 }
 
-void HtmlTextEncode(string & text)
+string HtmlTextEncode(string const& text)
 {
 	string encodeText;
 	if (text.length() != 0)
@@ -31,8 +29,8 @@ void HtmlTextEncode(string & text)
 			else
 				encodeText += letter;
 		}
-		text = encodeText;
 	}
+	return encodeText;
 }
 
 void PrintText(string const& text)

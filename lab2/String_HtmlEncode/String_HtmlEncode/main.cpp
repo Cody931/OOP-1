@@ -8,11 +8,15 @@ using namespace std;
 
 int _tmain()
 {
-	string text;
-	cout << "Enter the text to encode: ";
-	text = ReadInputText();
-	HtmlTextEncode(text);
-	PrintText(text);
+	string inputText, encodeHtmlText;
+	inputText = ReadInputText();
+	
+	while (inputText != "no") 
+	{
+		encodeHtmlText = HtmlTextEncode(inputText);
+		PrintText(encodeHtmlText);
+		inputText = ReadInputText();
+	}
     return 0;
 }
 
