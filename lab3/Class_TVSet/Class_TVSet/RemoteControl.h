@@ -21,7 +21,10 @@ private:
 private:
 	bool TurnedOn();
 	bool TurnedOff();
-	bool SelectedChannel(unsigned channel);
-	void GetInfo();
-	bool CRemoteControl::SelectedPreviouseChannel();
+	void GetInfo()const;
+	bool SelectedChannel(istringstream & strm);
+	bool SetChannelName(istringstream & strm);
+	void DeletedChannelName(istringstream & strm);
+	void GetChannelName(istringstream & strm)const;
+	void GetChannelByName(istringstream & strm)const;
 };

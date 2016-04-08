@@ -28,9 +28,7 @@ bool CRemoteControl::HandleCommand()
 	}
 	else if (action == "SelectChannel")
 	{
-		unsigned channel;
-		strm >> channel;
-		SelectedChannel(channel);
+		SelectedChannel(strm);
 	}
 	else if (action == "Info")
 	{
@@ -38,13 +36,28 @@ bool CRemoteControl::HandleCommand()
 	}
 	else if (action == "SelectPreviousChannel")
 	{
-		SelectedPreviouseChannel();
+		m_tv.SelectPreviousChannel();
+	}
+	else if (action == "SetChannelName")
+	{
+		SetChannelName(strm);
+	}
+	else if (action == "DeleteChannelName")
+	{
+		DeletedChannelName(strm);
+	}
+	else if (action == "GetChannelName")
+	{
+		GetChannelName(strm);
+	}
+	else if (action == "GetChannelByName")
+	{
+		GetChannelByName(strm);
 	}
 	else
 	{
 		return false;
 	}
-	return true;
 }
 
 bool CRemoteControl::TurnedOn()
@@ -69,17 +82,61 @@ bool CRemoteControl::TurnedOff()
 	return true;
 }
 
-bool CRemoteControl::SelectedChannel(unsigned channel)
+bool CRemoteControl::SetChannelName(istringstream & strm)
 {
-	return m_tv.SelectChannel(channel);
+	unsigned channel;
+	strm >> channel;
+	string buf, nameChannel;
+	while (strm >> buf)
+	{
+		nameChannel += (nameChannel.size() ? (' ' + buf) : buf);
+	}
+	return m_tv.SetChannelName(channel, nameChannel);
 }
 
-void CRemoteControl::GetInfo()
+bool CRemoteControl::SelectedChannel(istringstream & strm)
 {
-	cout << m_tv.GetChannel() << endl;
+	string value;
+	strm >> value;
+	unsigned channel = atoi(value.c_str());
+	if ((channel > 0) && (channel < 100))
+	{ 
+		return m_tv.SelectChannel(channel);
+	}
+	return m_tv.SelectChannel(value);
 }
 
-bool CRemoteControl::SelectedPreviouseChannel()
+void CRemoteControl::GetInfo()const
 {
-	return m_tv.SelectPreviousChannel();
+	m_tv.GetInfo() == 0 ? (cout << "TV is OFF.\n") : (cout << "Selected channel : " << m_tv.GetChannel() << endl);
+}
+
+void CRemoteControl::DeletedChannelName(istringstream & strm)
+{
+	string channelName;
+	strm >> channelName;
+	m_tv.DeleteChannelName(channelName);
+}
+
+void CRemoteControl::GetChannelName(istringstream & strm)const
+{
+	unsigned channel;
+	strm >> channel;
+	string channelName = m_tv.GetChannelName(channel);
+	cout << (channelName.size() ? channelName : "Channel name doesn't set!") << endl;
+}
+
+void CRemoteControl::GetChannelByName(istringstream & strm)const
+{
+	string channelName;
+	strm >> channelName;
+	unsigned channel = m_tv.GetChannelByName(channelName);
+	if (channel != 0)
+	{
+		cout << channel << endl;
+	}
+	else
+	{
+		"There is no channel with the same name!\n";
+	}
 }
