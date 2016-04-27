@@ -1,43 +1,39 @@
 #include "stdafx.h"
 #include "WordOccurrence.h"
-#include <iostream>
-#include <sstream>
-#include <cctype>
 #include <boost/range/algorithm/transform.hpp>
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string.hpp>
 
-string ReadInputData()
+using namespace std;
+
+string ReadInputData(istream & input)
 {
-	string words;
-	getline(cin, words);
-	return words;
+	string inputText;
+	getline(input, inputText);
+	return inputText;
 }
 
-vector<string> SplitStringIntoVector(string const& inputText)
+vector<string> SplitWords(string const& inputText)
 {
-	stringstream stream(inputText);
 	vector<string> words;
-	string buf;
-	while (stream >> buf)
-	{
-		words.push_back(buf);
-	}
+	boost::split(words, inputText, boost::is_any_of(" ,.!?-\n\t"));
+	words.erase(remove(words.begin(), words.end(), ""), words.end());
 	return words;
 }
 
-map<string, int> CalculateOccurrenceOfWords(string const& text)
+map<string, int> CalculateOccurrenceOfWords(string const& inputText)
 {
 	map<string, int> wordsOccurrence;
-	vector<string> inputWords = SplitStringIntoVector(text);
-	
-	if (inputWords.size() != 0)
+	for (auto word : SplitWords(inputText))
 	{
-		for (auto word : inputWords)
+		boost::transform(word, word.begin(), tolower);
+		if (wordsOccurrence.count(word))
 		{
-			boost::transform(word, word.begin(), tolower);
-			if (wordsOccurrence.count(word) == 1)
-				wordsOccurrence[word] += 1;
-			else
-				wordsOccurrence.insert(pair<string, int>(word, 1));
+			wordsOccurrence[word] += 1;
+		}
+		else
+		{
+			wordsOccurrence.insert(make_pair(word, 1));
 		}
 	}
 	return wordsOccurrence;

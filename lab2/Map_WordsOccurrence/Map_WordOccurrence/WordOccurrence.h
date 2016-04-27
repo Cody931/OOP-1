@@ -1,14 +1,9 @@
 #pragma once
-#include <string>
-#include <vector>
-#include <map>
 
-using namespace std;
+std::string ReadInputData(std::istream & input);
 
-string ReadInputData();
+std::vector<std::string> SplitWords(std::string const& inputText);
 
-vector<string> SplitStringIntoVector(string const& inputText);
+std::map<std::string, int> CalculateOccurrenceOfWords(std::string const& inputText);
 
-map<string, int> CalculateOccurrenceOfWords(string const& text);
-
-void PrintMap(map<string, int> const& words);
+void PrintMap(std::map<std::string, int> const& words);
