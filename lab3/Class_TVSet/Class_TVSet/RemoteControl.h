@@ -1,10 +1,5 @@
 #pragma once
 #include "TVSet.h"
-#include <iostream>
-#include <string>
-#include <sstream>
-#include <functional>
-#include <map>
 
 
 using namespace std;
@@ -15,16 +10,19 @@ public:
 	CRemoteControl(CTVSet & tv, istream & input, ostream & output);
 	bool HandleCommand();
 private:
+	typedef std::map<std::string, std::function<bool(std::istream & args)>> ActionMap;
 	CTVSet & m_tv;
 	istream & m_input;
 	ostream & m_output;
-private:
-	bool TurnedOn();
-	bool TurnedOff();
-	void GetInfo()const;
-	bool SelectedChannel(istringstream & strm);
-	bool SetChannelName(istringstream & strm);
-	void DeletedChannelName(istringstream & strm);
-	void GetChannelName(istringstream & strm)const;
-	void GetChannelByName(istringstream & strm)const;
+	const ActionMap m_actionMap;
+private: 
+	bool TurnedOn(std::istream & args);
+	bool TurnedOff(std::istream & args);
+	bool GetInfo(std::istream & args)const;
+	bool SelectedPreviousChannel(std::istream & args);
+	bool SelectedChannel(std::istream & strm);
+	bool SetChannelName(std::istream & strm);
+	bool DeletedChannelName(std::istream & strm);
+	bool GetChannelName(std::istream & strm)const;
+	bool GetChannelByName(std::istream & strm)const;
 };

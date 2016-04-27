@@ -2,6 +2,7 @@
 #include "TVSet.h"
 #include "RemoteControl.h"
 
+using namespace std;
 
 int main()
 {

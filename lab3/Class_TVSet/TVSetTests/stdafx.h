@@ -9,11 +9,15 @@
 
 #include <stdio.h>
 #include <tchar.h>
-#include <functional>
-#include <map>
-#include <iostream>
-#include <string>
-#include <sstream>
 
+///***************************
+#define BOOST_TEST_MODULE TVSetTestsModule
+#define BOOST_TEST_INCLUDED
+#pragma warning (disable:4702)
+#include <boost/test/unit_test.hpp>
+///***************************
 
 // TODO: Установите здесь ссылки на дополнительные заголовки, требующиеся для программы
+
+#include <boost/optional.hpp>
+#include <iostream>
