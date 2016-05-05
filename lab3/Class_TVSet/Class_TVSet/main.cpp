@@ -17,7 +17,6 @@ int main()
 			cout << "Unknown command!" << endl;
 		}
 	}
-
     return 0;
 }
 

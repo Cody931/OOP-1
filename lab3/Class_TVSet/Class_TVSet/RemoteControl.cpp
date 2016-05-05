@@ -32,7 +32,8 @@ bool CRemoteControl::HandleCommand()
 	auto it = m_actionMap.find(action);
 	if (it != m_actionMap.end())
 	{
-		it->second(strm);
+		cout << ((!it->second(strm)) ? "Operation can't be executed!\n" : "\n");
+		return true;
 	}
 	else
 	{
@@ -42,7 +43,7 @@ bool CRemoteControl::HandleCommand()
 
 bool CRemoteControl::SelectedPreviousChannel(std::istream & args)
 {
-	return m_tv.SelectPreviousChannel();
+	return ((m_tv.SelectPreviousChannel() ? true : false));
 }
 
 bool CRemoteControl::TurnedOn(std::istream & args)
@@ -52,7 +53,7 @@ bool CRemoteControl::TurnedOn(std::istream & args)
 		return false;
 	}
 	m_tv.TurnOn();
-	m_output << "TV is turned ON\n";
+	m_output << "TV is turned ON";
 	return true;
 }
 
@@ -63,7 +64,7 @@ bool CRemoteControl::TurnedOff(std::istream & args)
 		return false;
 	}
 	m_tv.TurnOff();
-	m_output << "TV is turned OFF" << endl;
+	m_output << "TV is turned OFF";
 	return true;
 }
 
@@ -93,8 +94,14 @@ bool CRemoteControl::SelectedChannel(istream & strm)
 
 bool CRemoteControl::GetInfo(istream & args)const
 {
-	m_tv.PrintNamesOfChannels();
-	m_tv.GetInfo() == 0 ? (m_output << "TV is OFF.\n") : (m_output << "Selected channel : " << m_tv.GetChannel() << endl);
+	if (m_tv.IsTurnedOn())
+	{
+		for (auto it : m_tv.m_tvChannelsNumbers)
+		{
+			cout << it.first << " - " << it.second << endl;
+		}
+	}
+	m_tv.GetChannel() == 0 ? (m_output << "TV is OFF.") : (m_output << "Selected channel : " << m_tv.GetChannel());
 	return true;
 }
 
@@ -109,24 +116,31 @@ bool CRemoteControl::GetChannelName(istream & strm)const
 {
 	unsigned channel;
 	strm >> channel;
-	string channelName = m_tv.GetChannelName(channel);
-	m_output << (channelName.size() ? channelName : "Channel name doesn't set!") << endl;
-	return true;
+	if (m_tv.IsTurnedOn())
+	{
+		boost::optional <string> channelName = m_tv.GetChannelName(channel);
+		m_output << (channelName ? *channelName : "Channel name doesn't set!");
+		return true;
+	}
+	return false;
 }
 
 bool CRemoteControl::GetChannelByName(istream & strm)const
 {
 	string channelName;
 	strm >> channelName;
-	unsigned channel = m_tv.GetChannelByName(channelName);
-	if (channel != 0)
+	boost::optional <unsigned> channel = m_tv.GetChannelByName(channelName);
+	if (m_tv.IsTurnedOn())
 	{
-		m_output << channel << endl;
+		if (channel)
+		{
+			m_output << (*channel);
+		}
+		else
+		{
+			m_output << "There is no channel with the same name!";
+		}
 		return true;
-	}
-	else
-	{
-		m_output << "There is no channel with the same name!\n";
 	}
 	return false;
 }

@@ -111,7 +111,7 @@ BOOST_FIXTURE_TEST_SUITE(TVSet, TVSetFixture)
 	BOOST_FIXTURE_TEST_SUITE(after_set_names_for_several_channels, after_set_names_for_several_channels_)
 		BOOST_AUTO_TEST_CASE(some_channel_have_name)
 		{
-			BOOST_CHECK_EQUAL(tv.GetChannelName(48), "BBC");
+			BOOST_CHECK_EQUAL(*tv.GetChannelName(48), "BBC");
 		}
 		BOOST_AUTO_TEST_CASE(can_select_channel_by_name)
 		{

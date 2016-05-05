@@ -11,7 +11,6 @@ namespace
 }
 
 
-
 bool CTVSet::IsTurnedOn()const
 {
 	return m_isOn;
@@ -34,7 +33,7 @@ unsigned CTVSet::GetChannel()const
 
 bool CTVSet::SelectChannel(unsigned channel)
 {
-	bool isAvailableChannel = (channel >= 1) && (channel <= 99);
+	bool isAvailableChannel = (channel >= MIN_CHANNEL_COUNT) && (channel <= MAX_CHANNEL_COUNT);
 	if (m_isOn && isAvailableChannel)
 	{
 		m_prevChannel = m_selectedChannel;
@@ -48,39 +47,22 @@ bool CTVSet::SelectChannel(string const& channelName)
 {
 	if (channelName.size() && m_isOn)
 	{
-		for (auto it : m_tvChannels)
+		boost::optional <unsigned> channel = GetChannelByName(channelName);
+		if (channel)
 		{
-			if (it.second == channelName)
-			{
-				m_prevChannel = m_selectedChannel;
-				m_selectedChannel = it.first;
-				return true;
-			}
+			m_prevChannel = m_selectedChannel;
+			m_selectedChannel = *channel;
+			return true;
 		}
 	}
-	return true;
-}
-
-void CTVSet::PrintNamesOfChannels()const
-{
-	for (auto it : m_tvChannels)
-	{
-		cout << it.first << " - " << it.second << endl;
-	}
-}
-
-unsigned CTVSet::GetInfo()const
-{
-	return m_isOn ? m_selectedChannel : 0;
+	return false;
 }
 
 bool CTVSet::SelectPreviousChannel()
 {
 	if (m_isOn && (m_prevChannel != 0))
 	{
-		unsigned prevChannel = m_prevChannel;
-		m_prevChannel = m_selectedChannel;
-		m_selectedChannel = prevChannel;
+		swap(m_prevChannel, m_selectedChannel);
 		return true;
 	}
 	return false;
@@ -88,15 +70,17 @@ bool CTVSet::SelectPreviousChannel()
 
 bool CTVSet::SetChannelName(unsigned channel, string const& channelName)
 {
-	bool isAviableChannel = (channel >= 1) && (channel <= 99);
+	bool isAviableChannel = (channel >= MIN_CHANNEL_COUNT) && (channel <= MAX_CHANNEL_COUNT);
 	if (m_isOn && isAviableChannel && channelName.size())
 	{
-		if (m_tvChannels.find(channel) != m_tvChannels.end())
+		if (m_tvChannelsNumbers.find(channel) != m_tvChannelsNumbers.end())
 		{
-			m_tvChannels[channel] = channelName;
+			m_tvChannelsNumbers[channel] = channelName;
+			m_tvChannelsName[channelName] = channel;
 			return true;
 		}
-		m_tvChannels.insert(pair<int, string>(channel, channelName));
+		m_tvChannelsNumbers.insert(pair<int, string>(channel, channelName));
+		m_tvChannelsName.insert(pair<string, unsigned>(channelName, channel));
 		return true;
 	}
 	return false;
@@ -104,40 +88,44 @@ bool CTVSet::SetChannelName(unsigned channel, string const& channelName)
 
 bool CTVSet::DeleteChannelName(string const& channelName)
 {
-	for (auto it = m_tvChannels.begin(); it != m_tvChannels.end(); )
+	if (m_isOn)
 	{
-		if (it->second == channelName)
+		auto it = m_tvChannelsName.find(channelName);
+		if (it != m_tvChannelsName.end())
 		{
-			m_tvChannels.erase(it++);
+			unsigned channel = it->second;
+			m_tvChannelsName.erase(it++);
+			m_tvChannelsNumbers.erase(m_tvChannelsNumbers.find(channel));
 			return true;
-		}
-		else
-		{
-			++it;
 		}
 	}
 	return false;
 }
 
-string CTVSet::GetChannelName(unsigned channel)const
+boost::optional <string> CTVSet::GetChannelName(unsigned channel)const
 {
-	string channelName;
-	auto it = m_tvChannels.find(channel);
-	if (it != m_tvChannels.end())
+	boost::optional<string> channelName;
+	if (m_isOn)
 	{
-		channelName = it->second;
+		auto it = m_tvChannelsNumbers.find(channel);
+		if (it != m_tvChannelsNumbers.end())
+		{
+			channelName = it->second;
+		}
 	}
 	return channelName;
 }
 
-unsigned CTVSet::GetChannelByName(string const& channelName)const
+boost::optional <unsigned> CTVSet::GetChannelByName(string const& channelName)const
 {
-	for (auto it : m_tvChannels)
+	boost::optional <unsigned> channel;
+	if (m_isOn)
 	{
-		if (it.second == channelName)
+		auto it = m_tvChannelsName.find(channelName);
+		if (it != m_tvChannelsName.end())
 		{
-			return it.first;
+			channel = it->second;
 		}
 	}
-	return false;
+	return channel;
 }
