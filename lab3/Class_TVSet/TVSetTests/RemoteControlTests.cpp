@@ -90,7 +90,7 @@ struct _after_set_names_of_some_channels : RemoteControlFixture
 	_after_set_names_of_some_channels()
 	{
 		tv.TurnOn();
-		tv.SetChannelName(45, "bbc");
+		tv.SetChannelName(45, "bbc rus");
 		tv.SetChannelName(32, "1_channel");
 		tv.SelectChannel(20);
 	}
@@ -104,11 +104,11 @@ BOOST_FIXTURE_TEST_SUITE(_after_set_names_of_some_channels_, _after_set_names_of
 	}
 	BOOST_AUTO_TEST_CASE(can_delete_name_of_some_channel_when_tv_is_on)
 	{
-		VerifyCommandWithNamesHandling("DeleteChannelName bbc", 45, none, "");
+		VerifyCommandWithNamesHandling("DeleteChannelName bbc rus", 45, none, "");
 	}
 	BOOST_AUTO_TEST_CASE(can_select_channel_by_channel_name)
 	{
-		VerifyCommandHandling("SelectChannel bbc", 45, "");
+		VerifyCommandHandling("SelectChannel bbc rus", 45, "");
 	}
 	BOOST_AUTO_TEST_CASE(can_get_channel_by_channel_name)
 	{
@@ -120,4 +120,52 @@ BOOST_FIXTURE_TEST_SUITE(_after_set_names_of_some_channels_, _after_set_names_of
 		VerifyCommandHandling("SelectPreviousChannel", 1, "");
 	}
 
+BOOST_AUTO_TEST_SUITE_END()
+
+struct _after_TV_is_off : _after_set_names_of_some_channels
+{
+	_after_TV_is_off()
+	{
+		tv.TurnOff();
+	}
+	void VerifyCommandWithNamesHandlingWhenTurnedOff(const string& command, const optional<unsigned> & channel, const optional<string> & channelName, const string& expectedOutput)
+	{
+		input << command;
+		BOOST_CHECK(tv.IsTurnedOn() == false);
+		BOOST_CHECK(remoteControl.HandleCommand());
+		BOOST_CHECK_EQUAL(tv.GetChannelName((*channel)), channelName);
+		BOOST_CHECK(input.eof());
+		BOOST_CHECK_EQUAL(output.str(), expectedOutput);
+	}
+};
+
+BOOST_FIXTURE_TEST_SUITE(_after_TV_is_off_, _after_TV_is_off)
+	BOOST_AUTO_TEST_CASE(can_not_get_name_of_some_channel)
+	{
+		VerifyCommandWithNamesHandlingWhenTurnedOff("GetChannelName 32", 32, none, "");
+	}
+	BOOST_AUTO_TEST_CASE(can_not_delete_name_of_some_channel_when_tv_is_on)
+	{
+		VerifyCommandWithNamesHandlingWhenTurnedOff("DeleteChannelName bbc rus", 45, none, "");
+	}
+	BOOST_AUTO_TEST_CASE(can_not_select_channel_by_channel_name)
+	{
+		VerifyCommandHandling("SelectChannel bbc rus", none, "");
+	}
+	BOOST_AUTO_TEST_CASE(can_not_select_channel)
+	{
+		VerifyCommandHandling("SelectChannel 45", none, "");
+	}
+	BOOST_AUTO_TEST_CASE(can_not_get_channel_by_channel_name)
+	{
+		VerifyCommandWithNamesHandlingWhenTurnedOff("GetChannelByName 1_channel", 32, none, "");
+	}
+	BOOST_AUTO_TEST_CASE(can_not_get_channel_name_by_channel_number)
+	{
+		VerifyCommandWithNamesHandlingWhenTurnedOff("GetChannelName 32", 32, none, "");
+	}
+	BOOST_AUTO_TEST_CASE(can_not_select_previous_channel)
+	{
+		VerifyCommandHandling("SelectPreviousChannel", none, "");
+	}
 BOOST_AUTO_TEST_SUITE_END()

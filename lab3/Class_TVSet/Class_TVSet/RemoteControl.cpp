@@ -4,6 +4,16 @@
 using namespace std::placeholders;
 using namespace std;
 
+string GetFullString(istream & strm)
+{
+	string buf, channelName;
+	while (strm >> buf)
+	{
+		channelName += (channelName.size() ? (' ' + buf) : buf);
+	}
+	return channelName;
+}
+
 CRemoteControl::CRemoteControl(CTVSet & tv, istream & input, ostream & output)
 	: m_tv(tv)
 	, m_input(input)
@@ -72,18 +82,12 @@ bool CRemoteControl::SetChannelName(istream & strm)
 {
 	unsigned channel;
 	strm >> channel;
-	string buf, channelName;
-	while (strm >> buf)
-	{
-		channelName += (channelName.size() ? (' ' + buf) : buf);
-	}
-	return m_tv.SetChannelName(channel, channelName);
+	return m_tv.SetChannelName(channel, GetFullString(strm));
 }
 
 bool CRemoteControl::SelectedChannel(istream & strm)
 {
-	string value;
-	strm >> value;
+	string value = GetFullString(strm);
 	unsigned channel = atoi(value.c_str());
 	if ((channel > 0) && (channel < 100))
 	{ 
@@ -107,9 +111,7 @@ bool CRemoteControl::GetInfo(istream & args)const
 
 bool CRemoteControl::DeletedChannelName(istream & strm)
 {
-	string channelName;
-	strm >> channelName;
-	return m_tv.DeleteChannelName(channelName);
+	return m_tv.DeleteChannelName(GetFullString(strm));
 }
 
 bool CRemoteControl::GetChannelName(istream & strm)const
@@ -127,9 +129,7 @@ bool CRemoteControl::GetChannelName(istream & strm)const
 
 bool CRemoteControl::GetChannelByName(istream & strm)const
 {
-	string channelName;
-	strm >> channelName;
-	boost::optional <unsigned> channel = m_tv.GetChannelByName(channelName);
+	boost::optional <unsigned> channel = m_tv.GetChannelByName(GetFullString(strm));
 	if (m_tv.IsTurnedOn())
 	{
 		if (channel)
