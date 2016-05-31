@@ -4,6 +4,6 @@
 class ISolidShape : public IShape
 {
 public:
-	virtual ~ISolidShape();
+	
 };
 

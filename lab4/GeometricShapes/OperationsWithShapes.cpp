@@ -18,71 +18,19 @@ COperationsWithShapes::COperationsWithShapes(istream & input, ostream & output, 
 {
 }
 
-void COperationsWithShapes::SortByPerimeter(int left, int right, vector<shared_ptr<IShape>> & x) {
-	int i, j;
-	double m;
-	i = left;
-	j = right;
-	m = (*x[((i + j + 1) / 2)]).GetPerimeter();
-	do 
+void COperationsWithShapes::SortByPerimeter(int left, int right, vector<shared_ptr<IShape>> & x) 
+{
+	std::sort(m_shapes.begin(), m_shapes.end(), [](std::shared_ptr<IShape> & first, std::shared_ptr<IShape> & second)
 	{
-		while ((*x[i]).GetPerimeter() > m)
-		{
-			i++;
-		}
-		while ((*x[j]).GetPerimeter() < m)
-		{
-			j--;
-		}
-		if (i <= j)
-		{
-			swap(x[i], x[j]);
-			
-			i++;
-			j--;
-		}
-	} while (i <= j);
-	if (left < j)
-	{
-		SortByPerimeter(left, j, x);
-	}
-	if (i < right)
-	{
-		SortByPerimeter(i, right, x);
-	}
+		return first->GetPerimeter() > second->GetPerimeter();
+	});
 }
 
 void COperationsWithShapes::SortByArea(int left, int right, vector<shared_ptr<IShape>> & x) {
-	int i, j;
-	double m;
-	i = left;
-	j = right;
-	m = (*x[((i + j + 1) / 2)]).GetArea();
-	do
+	std::sort(m_shapes.begin(), m_shapes.end(), [](std::shared_ptr<IShape> & first, std::shared_ptr<IShape> & second)
 	{
-		while ((*x[i]).GetArea() < m)
-		{
-			i++;
-		}
-		while ((*x[j]).GetArea() > m)
-		{
-			j--;
-		}
-		if (i <= j)
-		{
-			swap(x[i], x[j]);
-			i++;
-			j--;
-		}
-	} while (i <= j);
-	if (left < j)
-	{
-		SortByArea(left, j, x);
-	}
-	if (i < right)
-	{
-		SortByArea(i, right, x);
-	}
+		return first->GetArea() < second->GetArea();
+	});
 }
 
 void COperationsWithShapes::GetInfoAndSort()
@@ -91,13 +39,13 @@ void COperationsWithShapes::GetInfoAndSort()
 	SortByArea(0, m_shapes.size() - 1, m_shapes);
 	for (auto it : m_shapes)
 	{
-		m_output << (*it).ToString() << endl;
+		m_output << it->ToString() << endl;
 	}
 	cout << endl << endl << "Sorting by reduce the perimeters:\n" << endl;
 	SortByPerimeter(0, m_shapes.size() - 1, m_shapes);
 	for (auto it : m_shapes)
 	{
-		m_output << (*it).ToString() << endl;
+		m_output << it->ToString() << endl;
 	}
 }
 
@@ -128,35 +76,35 @@ std::shared_ptr<IShape> COperationsWithShapes::GetPointPtr(istream & strm)
 {
 	int x, y;
 	strm >> x >> y;
-	return shapePtr(new CPoint(x, y));
+	return make_shared<CPoint>(CPoint(x, y));
 }
 
 std::shared_ptr<IShape> COperationsWithShapes::GetLinePtr(std::istream & strm)
 {
 	int beginX, beginY, endX, endY;
 	strm >> beginX >> beginY >> endX >> endY;
-	return shapePtr(new CLineSegment(beginX, beginY, endX, endY));
+	return make_shared<CLineSegment>(CLineSegment(beginX, beginY, endX, endY));
 }
 
 std::shared_ptr<IShape> COperationsWithShapes::GetCirclePtr(std::istream & strm)
 {
 	int x, y, radius;
 	strm >> x >> y >> radius;
-	return shapePtr(new CCircle(x, y, radius));
+	return make_shared<CCircle>(CCircle(x, y, radius));
 }
 
 std::shared_ptr<IShape> COperationsWithShapes::GetRectanglePtr(std::istream & strm)
 {
 	int x, y, w, h;
 	strm >> x >> y >> w >> h;
-	return shapePtr(new CRectangle(x, y, w, h));
+	return make_shared<CRectangle>(CRectangle(x, y, w, h));
 }
 
 std::shared_ptr<IShape> COperationsWithShapes::GetTrianglePtr(std::istream & strm)
 {
 	int x1, y1, x2, y2, x3, y3;
 	strm >> x1 >> y1 >> x2 >> y2 >> x3 >> y3;
-	return shapePtr(new CTriangle(x1, y1, x2, y2, x3, y3));
+	return make_shared<CTriangle>(CTriangle(x1, y1, x2, y2, x3, y3));
 }
 
 COperationsWithShapes::~COperationsWithShapes()

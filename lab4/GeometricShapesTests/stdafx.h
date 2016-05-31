@@ -10,6 +10,8 @@
 #include <stdio.h>
 #include <tchar.h>
 
+
+
 ///**************************
 #define BOOST_TEST_MODULE GeometricShapesTestsModule
 #define BOOST_TEST_INCLUDED
@@ -17,4 +19,10 @@
 #include <boost/test/unit_test.hpp>
 ///*************************
 
+
 // TODO: Установите здесь ссылки на дополнительные заголовки, требующиеся для программы
+
+#include <iostream>
+#include <boost/optional.hpp>
+#include <string>
+#include <vector>

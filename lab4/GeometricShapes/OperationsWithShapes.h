@@ -24,8 +24,8 @@ private:
 	std::istream & m_input;
 	std::ostream & m_output;
 	
-	typedef std::shared_ptr<IShape> shapePtr;
-	std::vector<shapePtr> m_shapes;
+	//typedef std::shared_ptr<IShape> shapePtr;
+	std::vector<std::shared_ptr<IShape>> m_shapes;
 	typedef std::map<std::string, std::function<std::shared_ptr<IShape>(std::istream & args)>> ShapesMap;
 	const ShapesMap m_shapesMap;
 };

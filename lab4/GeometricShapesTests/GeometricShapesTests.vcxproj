@@ -149,14 +149,24 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\GeometricShapes\Circle.h" />
     <ClInclude Include="..\GeometricShapes\IShape.h" />
+    <ClInclude Include="..\GeometricShapes\LineSegment.h" />
     <ClInclude Include="..\GeometricShapes\Point.h" />
+    <ClInclude Include="..\GeometricShapes\Rectangle.h" />
+    <ClInclude Include="..\GeometricShapes\SolidShape.h" />
+    <ClInclude Include="..\GeometricShapes\Triangle.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\GeometricShapes\Circle.cpp" />
     <ClCompile Include="..\GeometricShapes\IShape.cpp" />
+    <ClCompile Include="..\GeometricShapes\LineSegment.cpp" />
     <ClCompile Include="..\GeometricShapes\Point.cpp" />
+    <ClCompile Include="..\GeometricShapes\Rectangle.cpp" />
+    <ClCompile Include="..\GeometricShapes\SolidShape.cpp" />
+    <ClCompile Include="..\GeometricShapes\Triangle.cpp" />
     <ClCompile Include="GeometricShapesTests.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
