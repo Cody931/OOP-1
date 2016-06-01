@@ -69,7 +69,7 @@ BOOST_AUTO_TEST_SUITE(Rectangle)
 		boost::optional <CRectangle> rect = CRectangle(0, 5, 10, 5);
 		BOOST_CHECK(rect);
 	}
-	BOOST_AUTO_TEST_CASE(has_perimeter_equal_his_length_and_zero_area)
+	BOOST_AUTO_TEST_CASE(has_true_perimeter_and_area)
 	{
 		CRectangle rect(0, 0, 10, 10);
 		BOOST_CHECK_EQUAL(rect.GetArea(), 100);
@@ -88,7 +88,7 @@ BOOST_AUTO_TEST_SUITE(Triangle)
 		boost::optional <CTriangle> triangle = CTriangle(0, 8, 1, 2, 4, 6);
 		BOOST_CHECK(triangle);
 	}
-	BOOST_AUTO_TEST_CASE(has_perimeter_equal_his_length_and_zero_area)
+	BOOST_AUTO_TEST_CASE(has_true_perimeter_and_area)
 	{
 		CTriangle triangle(0, 0, 0, 3, 4, 0);
 		BOOST_CHECK_EQUAL(triangle.GetArea(), 6);
