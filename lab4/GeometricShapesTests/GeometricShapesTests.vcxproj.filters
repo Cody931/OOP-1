@@ -53,9 +53,6 @@
     <ClCompile Include="GeometricShapesTests.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="..\GeometricShapes\IShape.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
     <ClCompile Include="..\GeometricShapes\Point.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
@@ -66,9 +63,6 @@
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
     <ClCompile Include="..\GeometricShapes\Rectangle.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
-    <ClCompile Include="..\GeometricShapes\SolidShape.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
     <ClCompile Include="..\GeometricShapes\Triangle.cpp">

@@ -2,9 +2,10 @@
 #include "Point.h"
 
 
-CPoint::CPoint(int x, int y)
+CPoint::CPoint(int x, int y, std::string const& borderColor)
 	: m_x(x)
 	, m_y(y)
+	, m_borderColor(borderColor)
 {
 };
 
@@ -22,10 +23,16 @@ std::string CPoint::ToString() const
 
 double CPoint::GetArea() const
 {
-	return 0.0;
+	return 0;
 }
 
 double CPoint::GetPerimeter() const
 {
-	return 0.0;
+	return 0;
 }
+
+std::string CPoint::GetBorderColor() const
+{
+	return m_borderColor;
+}
+

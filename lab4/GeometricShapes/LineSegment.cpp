@@ -2,9 +2,10 @@
 #include "LineSegment.h"
 
 
-CLineSegment::CLineSegment(int x1, int y1, int x2, int y2)
-	: m_beginPoint(x1, y1)
-	, m_endPoint(x2, y2)
+CLineSegment::CLineSegment(int x1, int y1, int x2, int y2, std::string const& borderColor)
+	: m_beginPoint(x1, y1, borderColor)
+	, m_endPoint(x2, y2, borderColor)
+	, m_borderColor(borderColor)
 {
 	m_length = sqrt(pow((m_endPoint.m_x - m_beginPoint.m_x), 2) + pow((m_endPoint.m_y - m_beginPoint.m_y), 2));
 }
@@ -19,7 +20,7 @@ std::string CLineSegment::ToString() const
 
 double CLineSegment::GetArea() const
 {
-	return 0.0;
+	return 0;
 }
 
 double CLineSegment::GetPerimeter() const
@@ -27,7 +28,13 @@ double CLineSegment::GetPerimeter() const
 	return m_length;
 }
 
+std::string CLineSegment::GetBorderColor() const
+{
+	return m_borderColor;
+}
+
 
 CLineSegment::~CLineSegment()
 {
 }
+

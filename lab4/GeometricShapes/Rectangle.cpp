@@ -2,10 +2,12 @@
 #include "Rectangle.h"
 
 
-CRectangle::CRectangle(int x, int y, int width, int height)
-	: m_vertex(x, y)
-	, m_width(width)
-	, m_height(height)
+CRectangle::CRectangle(int x, int y, int width, int height, std::string const& borderColor, std::string const& color)
+	: m_vertex(x, y, borderColor)
+	, m_width(width > 0 ? width : 0)
+	, m_height(height > 0 ? height : 0)
+	, m_borderColor(borderColor)
+	, m_color(color)
 {
 }
 
@@ -25,6 +27,16 @@ double CRectangle::GetPerimeter() const
 double CRectangle::GetArea() const
 {
 	return m_width * m_height;
+}
+
+std::string CRectangle::GetBorderColor() const
+{
+	return m_borderColor;
+}
+
+std::string CRectangle::GetColor() const
+{
+	return m_color;
 }
 
 
