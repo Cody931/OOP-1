@@ -8,7 +8,8 @@ struct EquationRoot4
 };
 
 
-// ¬ычисл€ем корни кубического уравнени€ ax^4 + bx^3 + cx^2 + dx + e = 0
+std::pair<boost::optional<double>, boost::optional<double>> Solve2(double a, double b, double c);
+double Solve3(double a, double b, double c);
+void AddNewPairOfRoots(EquationRoot4 & eq, std::pair<boost::optional<double>, boost::optional<double>> const& roots, double coef);
 EquationRoot4 Solve4(double a, double b, double c, double d, double e);
-void PushAvailableRoot(double resultRoot, EquationRoot4 & roots);
 void ShowRoots(EquationRoot4 const& roots);
