@@ -86,11 +86,9 @@ CRational const CRational::operator-() const
 
 CRational const CRational::operator+(CRational const & rational) const
 {
-	CRational result;
-	result.m_denominator = rational.GetDenominator() * GetDenominator();
-	result.m_numerator = GetNumerator() * (result.GetDenominator() / GetDenominator()) + rational.GetNumerator() * (result.GetDenominator() / rational.GetDenominator());
-	result.Normalize();
-	return result;
+	int resultDenominator = rational.GetDenominator() * GetDenominator();
+	int resultNumerator = GetNumerator() * (resultDenominator / GetDenominator()) + rational.GetNumerator() * (resultDenominator / rational.GetDenominator());
+	return CRational(resultNumerator, resultDenominator);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -99,11 +97,9 @@ CRational const CRational::operator+(CRational const & rational) const
 
 CRational const CRational::operator-(CRational const & rational) const
 {
-	CRational result;
-	result.m_denominator = rational.GetDenominator() * GetDenominator();
-	result.m_numerator = GetNumerator() * (result.GetDenominator() / GetDenominator()) - rational.GetNumerator() * (result.GetDenominator() / rational.GetDenominator());
-	result.Normalize();
-	return result;
+	int resultDenominator = rational.GetDenominator() * GetDenominator();
+	int resultNumerator = GetNumerator() * (resultDenominator / GetDenominator()) - rational.GetNumerator() * (resultDenominator / rational.GetDenominator());
+	return CRational(resultNumerator, resultDenominator);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -130,9 +126,7 @@ void CRational::operator-=(CRational const & rational)
 
 CRational const CRational::operator*(CRational const & rational) const
 {
-	CRational result(GetNumerator() * rational.GetNumerator(), GetDenominator() * rational.GetDenominator());
-	result.Normalize();
-	return result;
+	return CRational(GetNumerator() * rational.GetNumerator(), GetDenominator() * rational.GetDenominator());
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -141,9 +135,7 @@ CRational const CRational::operator*(CRational const & rational) const
 
 CRational const CRational::operator/(CRational const & rational) const
 {
-	CRational result(GetNumerator() * rational.GetDenominator(), GetDenominator() * rational.GetNumerator());
-	result.Normalize();
-	return result;
+	return CRational (GetNumerator() * rational.GetDenominator(), GetDenominator() * rational.GetNumerator());
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -210,6 +202,11 @@ bool const CRational::operator>=(CRational const& rational)const
 //	std::ostream в формате <числитель>/<знаменатель>, 
 //	например: 7/15
 //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// TODO: 14. Реализовать оператор ввода рационального числа из входного потока 
+//	std::istream в формате <числитель>/<знаменатель>, 
+//	например: 7/15
+//////////////////////////////////////////////////////////////////////////
 std::istream & operator >> (std::istream & stream, CRational & rational)
 {
 	int numerator;
@@ -226,11 +223,6 @@ std::istream & operator >> (std::istream & stream, CRational & rational)
 	return stream;
 }
 
-//////////////////////////////////////////////////////////////////////////
-// TODO: 14. Реализовать оператор ввода рационального числа из входного потока 
-//	std::istream в формате <числитель>/<знаменатель>, 
-//	например: 7/15
-//////////////////////////////////////////////////////////////////////////
 std::ostream & operator<<(std::ostream & stream, CRational const & rational)
 {
 	stream << rational.GetNumerator() << "/" << rational.GetDenominator();
