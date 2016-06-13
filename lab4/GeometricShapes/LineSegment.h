@@ -11,7 +11,7 @@ public:
 	double GetArea()const override;
 	double GetPerimeter()const override;
 	std::string GetBorderColor()const override;
-	~CLineSegment();
+	~CLineSegment() = default;
 private:
 	CPoint m_beginPoint;
 	CPoint m_endPoint;

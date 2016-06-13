@@ -12,7 +12,7 @@ public:
 	double GetArea()const override;
 	std::string GetBorderColor()const override;
 	std::string GetColor()const override;
-	~CRectangle();
+	~CRectangle() = default;
 private:
 	CPoint m_vertex;
 	int m_width;

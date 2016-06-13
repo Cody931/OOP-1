@@ -18,7 +18,7 @@ COperationsWithShapes::COperationsWithShapes(istream & input, ostream & output, 
 {
 }
 
-void COperationsWithShapes::SortByPerimeter(int left, int right, vector<shared_ptr<IShape>> & x) 
+void COperationsWithShapes::SortByPerimeter() 
 {
 	std::sort(m_shapes.begin(), m_shapes.end(), [](std::shared_ptr<IShape> & first, std::shared_ptr<IShape> & second)
 	{
@@ -26,7 +26,7 @@ void COperationsWithShapes::SortByPerimeter(int left, int right, vector<shared_p
 	});
 }
 
-void COperationsWithShapes::SortByArea(int left, int right, vector<shared_ptr<IShape>> & x) {
+void COperationsWithShapes::SortByArea() {
 	std::sort(m_shapes.begin(), m_shapes.end(), [](std::shared_ptr<IShape> & first, std::shared_ptr<IShape> & second)
 	{
 		return first->GetArea() < second->GetArea();
@@ -36,13 +36,13 @@ void COperationsWithShapes::SortByArea(int left, int right, vector<shared_ptr<IS
 void COperationsWithShapes::GetInfoAndSort()
 {
 	m_output << "Sorting by increasing the areas:\n" << endl;
-	SortByArea(0, m_shapes.size() - 1, m_shapes);
+	SortByArea();
 	for (auto it : m_shapes)
 	{
 		m_output << it->ToString() << endl;
 	}
 	cout << endl << endl << "Sorting by reduce the perimeters:\n" << endl;
-	SortByPerimeter(0, m_shapes.size() - 1, m_shapes);
+	SortByPerimeter();
 	for (auto it : m_shapes)
 	{
 		m_output << it->ToString() << endl;

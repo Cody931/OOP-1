@@ -11,8 +11,8 @@ class COperationsWithShapes
 public:
 	COperationsWithShapes(std::istream & input, std::ostream & output, std::vector<std::shared_ptr<IShape>> & shapes);
 	bool HandleCommand();
-	void SortByPerimeter(int left, int right, std::vector<std::shared_ptr<IShape>> & x);
-	void SortByArea(int left, int right, std::vector<std::shared_ptr<IShape>> & x);
+	void SortByPerimeter();
+	void SortByArea();
 	void GetInfoAndSort();
 	std::shared_ptr<IShape> GetPointPtr(std::istream & strm);
 	std::shared_ptr<IShape> GetLinePtr(std::istream & strm);

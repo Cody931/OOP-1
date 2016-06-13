@@ -9,8 +9,14 @@ CPoint::CPoint(int x, int y, std::string const& borderColor)
 {
 };
 
-CPoint::~CPoint()
+int CPoint::GetX() const
 {
+	return m_x;
+}
+
+int CPoint::GetY() const
+{
+	return m_y;
 }
 
 std::string CPoint::ToString() const

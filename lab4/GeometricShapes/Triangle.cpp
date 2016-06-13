@@ -19,9 +19,9 @@ CTriangle::CTriangle(int x1, int y1, int x2, int y2, int x3, int y3, std::string
 std::string CTriangle::ToString() const
 {
 	std::stringstream stream;
-	stream << "Triangle <<" << m_firstVertex.m_x << "," << m_firstVertex.m_y << ">";
-	stream << "<" << m_secondVertex.m_x << "," << m_secondVertex.m_y << ">";
-	stream << "<" << m_thirdVertex.m_x << "," << m_thirdVertex.m_y << ">>";
+	stream << "Triangle <<" << m_firstVertex.GetX() << "," << m_firstVertex.GetY() << ">";
+	stream << "<" << m_secondVertex.GetX() << "," << m_secondVertex.GetY() << ">";
+	stream << "<" << m_thirdVertex.GetX() << "," << m_thirdVertex.GetY() << ">>";
 	stream << ", P=" << GetPerimeter() << ", S=" << GetArea();
 	return stream.str();
 }
@@ -45,9 +45,4 @@ std::string CTriangle::GetBorderColor() const
 std::string CTriangle::GetColor() const
 {
 	return m_color;
-}
-
-
-CTriangle::~CTriangle()
-{
 }

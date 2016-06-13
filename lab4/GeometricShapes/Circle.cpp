@@ -17,7 +17,7 @@ CCircle::CCircle(int x, int y, int radius, std::string const& borderColor, std::
 std::string CCircle::ToString() const
 {
 	std::stringstream stream;
-	stream << "Circle <" << m_centrePoint.m_x << "," << m_centrePoint.m_y << ">, R=" << m_radius;
+	stream << "Circle <" << m_centrePoint.GetX() << "," << m_centrePoint.GetY() << ">, R=" << m_radius;
 	stream << ", P=" << GetPerimeter() << ", S=" << GetArea();
 	return stream.str();
 }

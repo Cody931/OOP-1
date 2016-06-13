@@ -62,6 +62,12 @@ BOOST_AUTO_TEST_SUITE(Circle)
 		CCircle circle(10, 10, 10, "#00ff00", "#00ff00");
 		BOOST_CHECK_EQUAL(circle.ToString(), "Circle <10,10>, R=10, P=62.8319, S=314.159");
 	}
+	BOOST_AUTO_TEST_CASE(can_not_have_negative_radius)
+	{
+		CCircle circle(10, 10, -5, "#00ff00", "#00ff00");
+		BOOST_CHECK_EQUAL(circle.ToString(), "Circle <10,10>, R=0, P=0, S=0");
+	}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(Rectangle)
