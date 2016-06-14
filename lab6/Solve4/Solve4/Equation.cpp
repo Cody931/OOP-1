@@ -72,11 +72,11 @@ EquationRoot4 Solve4(double a, double b, double c, double d, double e)
 	if (q == 0)
 	{
 		pair<optional<double>, optional<double>> equationRoot2First = Solve2(1, p, r);
-		if (equationRoot2First.first)
+		if (equationRoot2First.first && equationRoot2First.first.get() > 0)
 		{
 			AddNewPairOfRoots(result, Solve2(1, 0, -equationRoot2First.first.get()), -b / (4.0 * a));
 		}
-		if (equationRoot2First.second)
+		if (equationRoot2First.second && equationRoot2First.second.get() > 0)
 		{
 			AddNewPairOfRoots(result, Solve2(1, 0, -equationRoot2First.first.get()), -b / (4.0 * a));
 		}
@@ -88,9 +88,16 @@ EquationRoot4 Solve4(double a, double b, double c, double d, double e)
 		AddNewPairOfRoots(result, Solve2(1, sqrt(2 * z), p / 2 + z - q / (2 * sqrt(2 * z))), -b / (4.0 * a));
 	}
 	sort(begin(result.roots), begin(result.roots) + result.numRoots);
-	if (result.numRoots == 0)
+	try
 	{
-		throw domain_error("Equation does not have of real roots");
+		if (result.numRoots == 0)
+		{
+			throw domain_error("Equation does not have of real roots");
+		}
+	}
+	catch (domain_error)
+	{
+		cout << "Equation does not have of real roots" << endl;
 	}
 	return result;
 }
@@ -105,9 +112,5 @@ void ShowRoots(EquationRoot4 const& roots)
 			cout << roots.roots[i] << "  ";
 		}
 		cout << endl;
-	}
-	else
-	{
-		cout << "Equation does not have of real roots" << endl;
 	}
 }
