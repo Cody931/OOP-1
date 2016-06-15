@@ -30,6 +30,15 @@ BOOST_AUTO_TEST_SUITE(Template_FindMax)
 		BOOST_CHECK_EQUAL("mom", maxValue);
 	}
 
+	/*BOOST_AUTO_TEST_CASE(find_max_const_char_element)
+	{
+		vector<const char*> a = { "world", "hello" };
+		const char* maxValue;
+		//FindMax(a, maxValue);
+		BOOST_CHECK(FindMax(a, maxValue));
+		BOOST_CHECK_EQUAL("world", maxValue);
+	}*/
+
 	BOOST_AUTO_TEST_CASE(return_false_when_vector_is_empty)
 	{
 		vector<int> a;
