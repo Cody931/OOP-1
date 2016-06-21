@@ -158,7 +158,6 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\FindMax\FindMax.cpp" />
     <ClCompile Include="maxTest.cpp" />
     <ClCompile Include="FindMaxTests.cpp" />
     <ClCompile Include="stdafx.cpp">
