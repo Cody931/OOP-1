@@ -32,7 +32,7 @@ BOOST_AUTO_TEST_SUITE(Template_FindMax)
 
 	BOOST_AUTO_TEST_CASE(find_max_const_char_element)
 	{
-		vector<const char*> a = { "hello", "world" };
+		vector<const char*> a = { "hello", "world", "cat", "dog" };
 		const char* maxValue = "";
 		BOOST_CHECK(FindMax(a, maxValue));
 		BOOST_CHECK_EQUAL("world", maxValue);

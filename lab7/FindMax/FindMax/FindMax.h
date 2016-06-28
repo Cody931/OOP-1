@@ -22,9 +22,9 @@ bool FindMax <const char*> (std::vector<const char*> const& arr, const char*& ma
 	{
 		return false;
 	}
-	std::for_each(begin(arr), end(arr), [&](auto it) 
+	maxValue = *std::max_element(begin(arr), end(arr), [](auto last, auto next)
 	{
-		maxValue = (strcmp(maxValue, it) > 0 ? maxValue : it);
+		return (strcmp(last, next) > 0 ? false : true);
 	});
 	return true;
 }
