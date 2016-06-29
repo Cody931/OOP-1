@@ -2,7 +2,6 @@
 
 #include <new>
 #include <algorithm>
-#include <iostream>
 #include "MyIterator.h"
 
 template <typename T>
@@ -52,7 +51,7 @@ public:
 				auto itemsBegin = items.begin();
 				while (itemsBegin < items.end())
 				{
-					new (newEnd)T(*itemsBegin);
+					new (newEnd)T(*itemsBegin); 
 					newEnd++;
 					itemsBegin++;
 				}
@@ -62,7 +61,7 @@ public:
 			}
 			catch (...)
 			{
-				DestroyItems(newBegin, newEnd);
+				DeleteItems(newBegin, newEnd);//если выбросится исключение, raw dealloc не вызовется DONE
 				throw;
 			}
 		}
@@ -70,14 +69,22 @@ public:
 
 	void Resize(size_t newSize)
 	{
-		if (newSize > GetSize())
+		if (newSize <= GetSize())
 		{
-			throw invalid_argument("incorrect size");
+			DestroyItems(m_begin + newSize, m_end);
+			m_end -= GetSize() - newSize;
 		}
-		else if (newSize < GetSize())
+		if ((newSize > GetSize()) && (newSize <= GetCapacity()))
 		{
-			size_t newCapacity = (newSize == 0 ? 0u : newSize * 2);
-			auto newBegin = RawAlloc(newCapacity);
+			for (size_t i = 0; i < newSize - GetSize(); i++)
+			{
+				new (m_end)T();
+				++m_end;
+			}
+		}
+		else if (newSize > GetSize() && newSize > GetCapacity())
+		{
+			auto newBegin = RawAlloc(newSize);
 			T *newEnd = newBegin;
 			try
 			{
@@ -89,49 +96,13 @@ public:
 				throw;
 			}
 			DeleteItems(m_begin, m_end);
-			// Переключаемся на использование нового хранилища элементов
+
 			m_begin = newBegin;
 			m_end = newEnd;
-			m_endOfCapacity = m_begin + newCapacity;
+			m_endOfCapacity = m_begin + newSize;
 		}
 	}
-
-	void Resize(size_t newSize, T const& value)
-	{
-		if (newSize < GetSize())
-		{
-			Resize(newSize);
-		}
-		else
-		{
-			size_t newCapacity = (newSize == 0 ? 0u : newSize * 2);
-			auto newBegin = RawAlloc(newCapacity);
-			T *newEnd = newBegin;
-			try
-			{
-				CopyItems(m_begin, m_end, newBegin, newEnd);
-				if (newSize > GetSize())
-				{
-					for (size_t i = 0; i < newSize - GetSize(); i++)
-					{
-						new (newEnd)T(value);
-						++newEnd;
-					}
-				}
-			}
-			catch (...)
-			{
-				DeleteItems(newBegin, newEnd);
-				throw;
-			}
-			DeleteItems(m_begin, m_end);
-			// Переключаемся на использование нового хранилища элементов
-			m_begin = newBegin;
-			m_end = newEnd;
-			m_endOfCapacity = m_begin + newCapacity;
-		}
-	}
-
+	
 	void Append(const T & value)
 	{
 		if (m_end == m_endOfCapacity) // no free space
@@ -188,11 +159,10 @@ public:
 		return m_endOfCapacity - m_begin;
 	}
 
-	void Clear()
+	void Clear() 
 	{
-		DeleteItems(m_begin, m_endOfCapacity);
-		m_begin = m_end = nullptr;
-		m_endOfCapacity = nullptr;
+		DestroyItems(m_begin, m_end);//просто удалить элементы, не удаляя "ведро" DONE
+		m_end = m_begin;
 	}
 	
 	T & operator [](int index)
@@ -203,7 +173,17 @@ public:
 			throw out_of_range("Index out of range");
 		}
 		return (index >= 0 ? *(m_begin + index) : *(m_end + index));
-	}
+	} 
+
+	T const& operator [](int index)const 
+	{
+		size_t count = abs(index);
+		if (count >= GetSize())
+		{
+			throw out_of_range("Index out of range");
+		}
+		return (index >= 0 ? *(m_begin + index) : *(m_end + index));
+	} //нет константной версии оператора DONE
 
 	CMyArray<T> & operator=(CMyArray<T> && arr) //перемещающий оператор присваивания
 	{
@@ -220,14 +200,17 @@ public:
 		return *this;
 	}
 
-	CMyArray<T> & operator=(const CMyArray<T> & arr)	//оператор присваивания
+	CMyArray<T> & operator=(const CMyArray<T> & arr)
 	{
-		if (std::addressof(*this) != std::addressof(arr))	// защита от самоприсваивания
+		if (std::addressof(*this) != std::addressof(arr))
 		{
-			Clear();
 			const auto size = arr.GetSize();
 			if (size != 0)
 			{
+				CMyArray<T> subArr = *this;
+				DeleteItems(m_begin, m_end);
+				m_begin = m_end = m_endOfCapacity = nullptr;
+
 				m_begin = RawAlloc(size);
 				try
 				{
@@ -236,7 +219,9 @@ public:
 				}
 				catch (...)
 				{
-					DeleteItems(m_begin, m_end);
+					DestroyItems(m_begin, m_end);
+					m_end = m_begin;
+					CopyItems(subArr.m_begin, subArr.m_end, m_begin, m_end);
 					throw;
 				}
 			}
@@ -249,17 +234,24 @@ public:
 		DeleteItems(m_begin, m_end);
 	}
 	
-	typedef CMyIterator<T> iterator;
+	typedef CMyIterator<T, false> iterator; 
+	typedef CMyIterator<T, true> reverse_iterator;
+	typedef CMyIterator<const T, false> const_iterator;
+	typedef CMyIterator<const T, true> const_reverse_iterator;
 
-	iterator begin() { return iterator(m_begin); };
+	iterator begin() { return iterator(m_begin); }
 
-	iterator end() { return iterator(m_end - 1); };
+	iterator end() { return iterator(m_end); }
 
-	iterator rbegin() { return iterator(m_end - 1, true); };
+	const_iterator begin() const { return const_iterator(m_begin); }
 
-	iterator rend() { return iterator(m_begin, true); };
+	const_iterator end() const { return const_iterator(m_end); }
+
+	reverse_iterator rbegin() {	return reverse_iterator(m_end - 1); }
+
+	reverse_iterator rend()	{return reverse_iterator(m_begin - 1);}
+
 private:
-
 	static void DeleteItems(T *begin, T *end)
 	{
 		// Разрушаем старые элементы

@@ -1,14 +1,8 @@
 #include "stdafx.h"
 #include "MyArray.h"
+#include <iostream>
 
 using namespace std;
-
-struct ArrayItem
-{
-	ArrayItem(int value = 0) : value(value)
-	{}
-	int value;
-};
 
 struct EmptyIntegerArray
 {
@@ -71,23 +65,25 @@ BOOST_FIXTURE_TEST_SUITE(MyArray, EmptyIntegerArray)
 	BOOST_AUTO_TEST_SUITE(can_be_resized)
 		BOOST_AUTO_TEST_CASE(resize)
 		{
-			arr.Append(0);	
-			arr.Append(1);
+			CMyArray<int> arr1 = {11, 22, 33, 44};
+			arr1.Resize(2);
+			BOOST_CHECK_EQUAL(arr1.GetSize(), 2u);
+			BOOST_CHECK_EQUAL(arr1.GetCapacity(), 4u);
 
-			arr.Resize(3, 2);
-			BOOST_CHECK_EQUAL(arr.GetSize(), 3u);
-			BOOST_CHECK_EQUAL(arr.GetCapacity(), 6u);
+			arr1.Resize(3);
+			BOOST_CHECK_EQUAL(arr1.GetSize(), 3u);
+			BOOST_CHECK_EQUAL(arr1.GetCapacity(), 4u);
 
-			arr.Append(2);
-			arr.Append(3);
-			arr.Append(5);
-			arr.Append(6);
-			BOOST_CHECK_EQUAL(arr.GetSize(), 7u);
-			BOOST_CHECK_EQUAL(arr.GetCapacity(), 12u);
+			arr1.Append(2);
+			arr1.Append(3);
+			arr1.Append(5);
+			arr1.Append(6);
+			BOOST_CHECK_EQUAL(arr1.GetSize(), 7u);
+			BOOST_CHECK_EQUAL(arr1.GetCapacity(), 8u);
 
-			arr.Resize(3);
-			BOOST_CHECK_EQUAL(arr.GetSize(), 3u);
-			BOOST_CHECK_EQUAL(arr.GetCapacity(), 6u);
+			arr1.Resize(3);
+			BOOST_CHECK_EQUAL(arr1.GetSize(), 3u);
+			BOOST_CHECK_EQUAL(arr1.GetCapacity(), 8u);
 		}
 	BOOST_AUTO_TEST_SUITE_END()
 	BOOST_AUTO_TEST_SUITE(can_clear_all_elements)
@@ -101,11 +97,11 @@ BOOST_FIXTURE_TEST_SUITE(MyArray, EmptyIntegerArray)
 
 			arr.Clear();
 			BOOST_CHECK_EQUAL(arr.GetSize(), 0u);
-			BOOST_CHECK_EQUAL(arr.GetCapacity(), 0u);
+			BOOST_CHECK_EQUAL(arr.GetCapacity(), 4u);
 
 			arr.Append(3);
 			BOOST_CHECK_EQUAL(arr.GetSize(), 1u);
-			BOOST_CHECK_EQUAL(arr.GetCapacity(), 1u);
+			BOOST_CHECK_EQUAL(arr.GetCapacity(), 4u);
 		}
 	BOOST_AUTO_TEST_SUITE_END()
 	BOOST_AUTO_TEST_SUITE(return_element_on_the_some_position)
@@ -142,6 +138,12 @@ BOOST_FIXTURE_TEST_SUITE(MyArray, EmptyIntegerArray)
 			arr = arr2;
 			BOOST_CHECK_EQUAL(arr.GetSize(), 2u);
 			BOOST_CHECK_EQUAL(arr.GetCapacity(), 2u);
+			CMyArray<int> arr1 = {0, 1, 2, 3, 4, 5};
+			arr = arr2;
+			BOOST_CHECK_EQUAL(arr.GetSize(), 2u);
+			BOOST_CHECK_EQUAL(arr.GetCapacity(), 2u);
+			BOOST_CHECK_EQUAL(arr1.GetSize(), 6u);
+			BOOST_CHECK_EQUAL(arr1.GetCapacity(), 6u);
 		}
 		BOOST_AUTO_TEST_CASE(overloading_assigment_operator)
 		{
@@ -162,20 +164,26 @@ BOOST_FIXTURE_TEST_SUITE(MyArray, EmptyIntegerArray)
 			arr.Append(7);
 
 			BOOST_CHECK_EQUAL(*arr.begin(), 1);
-			BOOST_CHECK_EQUAL(*arr.end(), 7);
 			
 			CMyArray<int> arr1({ 0, 1, 2, 3 });
-			int i = 0;
+			int ind = 0;
 			bool result = true;
-			for (auto it : arr1)
+			CMyIterator<int, false> iter = arr1.begin();
+			for (size_t i = 0; i < arr1.GetSize(); i++, ind++)
 			{
-				if (!it == i)
+				if (iter[i] != ind)
 				{
 					result = !result;
 				}
-				++i;
 			}
 			BOOST_CHECK(result);
+			auto ptr = arr.begin();
+			ptr += 1;
+			BOOST_CHECK_EQUAL(*ptr, 4);
+			ptr += 1;
+			BOOST_CHECK_EQUAL(*ptr, 7);
+			ptr -= 1;
+			BOOST_CHECK_EQUAL(*ptr, 4);
 		}
 		BOOST_AUTO_TEST_CASE(rbegin_and_rend)
 		{
@@ -184,10 +192,16 @@ BOOST_FIXTURE_TEST_SUITE(MyArray, EmptyIntegerArray)
 			arr.Append(2);
 
 			BOOST_CHECK_EQUAL(*arr.rbegin(), 2);
-			BOOST_CHECK_EQUAL(*arr.rend(), 0);
-			auto p = arr.rbegin();
-			++p;
-			BOOST_CHECK_EQUAL(*p, 1);
+			int count = 2;
+			bool result = true;
+			for (auto p = arr.rbegin(); p != arr.rend(); p++, count--)
+			{
+				if (*p != count)
+				{
+					result = !result;
+				}
+			}
+			BOOST_CHECK(result);
 		}
 	BOOST_AUTO_TEST_SUITE_END()
 	BOOST_AUTO_TEST_SUITE(has_moves_constructor)
