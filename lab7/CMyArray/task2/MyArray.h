@@ -39,7 +39,7 @@ public:
 		arr.m_endOfCapacity = nullptr;
 	}
 
-	CMyArray(std::initializer_list<T> items)
+	CMyArray(std::initializer_list<T> const& items)
 	{
 		const auto size = items.size();
 		if (size != 0)
@@ -72,15 +72,23 @@ public:
 		if (newSize <= GetSize())
 		{
 			DestroyItems(m_begin + newSize, m_end);
-			m_end -= GetSize() - newSize;
+			m_end -= (GetSize() - newSize);
 		}
-		if ((newSize > GetSize()) && (newSize <= GetCapacity()))
+		else if ((newSize > GetSize()) && (newSize <= GetCapacity()))
 		{
-			for (size_t i = 0; i < newSize - GetSize(); i++)
-			{
-				new (m_end)T();
-				++m_end;
-			}
+			//try
+			//{
+				for (size_t i = 0; i < newSize - GetSize(); i++)
+				{
+					new (m_end)T();
+					++m_end;
+				}
+			//}
+			//catch (...)
+			//{
+			//	DestroyItems(m_begin + newSize, m_end); //// m_end
+			//	throw;
+			//}
 		}
 		else if (newSize > GetSize() && newSize > GetCapacity())
 		{
@@ -88,7 +96,7 @@ public:
 			T *newEnd = newBegin;
 			try
 			{
-				CopyItems(m_begin, m_begin + newSize, newBegin, newEnd);
+				CopyItems(m_begin, m_end, newBegin, newEnd);
 			}
 			catch (...)
 			{
@@ -165,27 +173,25 @@ public:
 		m_end = m_begin;
 	}
 	
-	T & operator [](int index)
+	T & operator [](size_t index)
 	{
-		size_t count = abs(index);
-		if (count >= GetSize())
+		if (index >= GetSize())
 		{
 			throw out_of_range("Index out of range");
 		}
-		return (index >= 0 ? *(m_begin + index) : *(m_end + index));
+		return *(m_begin + index);
 	} 
 
-	T const& operator [](int index)const 
+	T const& operator [](size_t index)const
 	{
-		size_t count = abs(index);
-		if (count >= GetSize())
+		if (index >= GetSize())
 		{
 			throw out_of_range("Index out of range");
 		}
-		return (index >= 0 ? *(m_begin + index) : *(m_end + index));
+		return *(m_begin + index);
 	} //нет константной версии оператора DONE
 
-	CMyArray<T> & operator=(CMyArray<T> && arr) //перемещающий оператор присваивания
+	CMyArray<T> & operator=(CMyArray<T> && arr)
 	{
 		if (std::addressof(*this) != std::addressof(arr))
 		{
@@ -207,7 +213,9 @@ public:
 			const auto size = arr.GetSize();
 			if (size != 0)
 			{
-				CMyArray<T> subArr = *this;
+				//CMyArray<T> subArr(*this);
+
+
 				DeleteItems(m_begin, m_end);
 				m_begin = m_end = m_endOfCapacity = nullptr;
 

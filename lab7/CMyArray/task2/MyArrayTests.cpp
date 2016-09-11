@@ -112,10 +112,9 @@ BOOST_FIXTURE_TEST_SUITE(MyArray, EmptyIntegerArray)
 			arr.Append(7);
 			BOOST_CHECK_EQUAL(arr.GetSize(), 3u);
 			BOOST_CHECK_EQUAL(arr.GetCapacity(), 4u);
-			BOOST_CHECK_EQUAL(arr[0], 1);
-			BOOST_CHECK_EQUAL(arr[-1], 7);
-			BOOST_CHECK_EQUAL(arr[-2], 4);
-			BOOST_CHECK_THROW(arr[3], std::out_of_range);
+
+			BOOST_CHECK_EQUAL(arr[0u], 1);
+			BOOST_CHECK_THROW(arr[3u], std::out_of_range);
 		}
 	BOOST_AUTO_TEST_SUITE_END()
 	BOOST_AUTO_TEST_SUITE(realize_operators)
@@ -203,6 +202,7 @@ BOOST_FIXTURE_TEST_SUITE(MyArray, EmptyIntegerArray)
 			}
 			BOOST_CHECK(result);
 		}
+
 	BOOST_AUTO_TEST_SUITE_END()
 	BOOST_AUTO_TEST_SUITE(has_moves_constructor)
 		BOOST_AUTO_TEST_CASE(moves_constructor)
